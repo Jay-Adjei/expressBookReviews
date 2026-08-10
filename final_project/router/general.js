@@ -38,8 +38,8 @@ public_users.get("/title/:title", function (req, res) {
   const title = req.params.title;
   const filteredBooks = {};
   for (isbn in books) {
-    if (books[isbn].title === title){
-      filteredBooks[isbn] = books[isbn]
+    if (books[isbn].title === title) {
+      filteredBooks[isbn] = books[isbn];
     }
   }
   return res.status(300).json(filteredBooks);
@@ -47,8 +47,9 @@ public_users.get("/title/:title", function (req, res) {
 
 //  Get book review
 public_users.get("/review/:isbn", function (req, res) {
-  //Write your code here
-  return res.status(300).json({ message: "Yet to be implemented" });
+  const isbn = req.params.isbn;
+
+  return res.status(300).json(books[isbdn].reviews);
 });
 
 module.exports.general = public_users;
