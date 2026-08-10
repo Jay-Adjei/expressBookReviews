@@ -24,13 +24,25 @@ public_users.get("/isbn/:isbn", function (req, res) {
 // Get book details based on author
 public_users.get("/author/:author", function (req, res) {
   const author = req.params.author;
-  return res.status(300).json(books[author], null, 4);
+  const filteredBooks = {};
+  for (let isbn in books) {
+    if (books[isbn].author === author) {
+      filteredBooks[isbn] = books[isbn];
+    }
+  }
+  return res.status(300).json(filteredBooks);
 });
 
 // Get all books based on title
 public_users.get("/title/:title", function (req, res) {
-  //Write your code here
-  return res.status(300).json({ message: "Yet to be implemented" });
+  const title = req.params.title;
+  const filteredBooks = {};
+  for (isbn in books) {
+    if (books[isbn].title === title){
+      filteredBooks[isbn] = books[isbn]
+    }
+  }
+  return res.status(300).json(filteredBooks);
 });
 
 //  Get book review
