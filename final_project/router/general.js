@@ -54,24 +54,26 @@ public_users.get("/isbn/:isbn", async function (req, res) {
 });
 
 // Get book details based on author
-public_users.get("/author/:author", function (req, res) {
+public_users.get("/author/:author", async function (req, res) {
   const author = req.params.author;
   const filteredBooks = {};
   for (let isbn in books) {
-    if (books[isbn].author === author) {
-      filteredBooks[isbn] = books[isbn];
+    const booksByIsbn = await Promise.resolve(books[isbn]);
+    if (booksByIsbn.author === author) {
+      filteredBooks[isbn] = booksByIsbn;
     }
   }
   return res.status(300).json(filteredBooks);
 });
 
 // Get all books based on title
-public_users.get("/title/:title", function (req, res) {
+public_users.get("/title/:title", async function (req, res) {
   const title = req.params.title;
   const filteredBooks = {};
   for (isbn in books) {
-    if (books[isbn].title === title) {
-      filteredBooks[isbn] = books[isbn];
+    const booksByIsbn = await Promise.resolve(books[isbn]);
+    if (booksByIsbn.title === title) {
+      filteredBooks[isbn] = booksByIsbn;
     }
   }
   return res.status(300).json(filteredBooks);
