@@ -3,20 +3,21 @@ let books = require("./booksdb.js");
 let isValid = require("./auth_users.js").isValid;
 let users = require("./auth_users.js").users;
 const public_users = express.Router();
+const axios = require("axios");
 
 // Check if a user with the given username already exists
 const doesExist = (username) => {
-    // Filter the users array for any user with the same username
-    let userswithsamename = users.filter((user) => {
-        return user.username === username;
-    });
-    // Return true if any user with the same username is found, otherwise false
-    if (userswithsamename.length > 0) {
-        return true;
-    } else {
-        return false;
-    }
-}
+  // Filter the users array for any user with the same username
+  let userswithsamename = users.filter((user) => {
+    return user.username === username;
+  });
+  // Return true if any user with the same username is found, otherwise false
+  if (userswithsamename.length > 0) {
+    return true;
+  } else {
+    return false;
+  }
+};
 
 public_users.post("/register", (req, res) => {
   //Write your code here
@@ -25,19 +26,24 @@ public_users.post("/register", (req, res) => {
 
   if (username && password) {
     if (!doesExist(username)) {
-      users.push({"username": username, "password": password});
-      res.status(200).json({message: "User successfully created"})
+      users.push({ username: username, password: password });
+      console.log(users);
+      res.status(200).json({ message: "User successfully created" });
     } else {
-      return res.status(404).json({message: "User already exits"})
+      return res.status(404).json({ message: "User already exits" });
     }
   }
-  return res.status(404).json({message: "Unable to register"});
+  return res.status(404).json({ message: "Unable to register" });
 });
 
 // Get the book list available in the shop
-public_users.get("/", function (req, res) {
-  //Write your code here
-  return res.status(300).json(books, null, 4);
+public_users.get("/", async function (req, res) {
+  try {
+    const result = await Promise.resolve(books);
+    return res.status(200).json(result);
+  } catch (error) {
+    return res.status(500).json({ message: "Books could not be retrieved" });
+  }
 });
 
 // Get book details based on ISBN
@@ -74,7 +80,7 @@ public_users.get("/title/:title", function (req, res) {
 public_users.get("/review/:isbn", function (req, res) {
   const isbn = req.params.isbn;
 
-  return res.status(300).json(books[isbdn].reviews);
+  return res.status(300).json(books[isbn].reviews);
 });
 
 module.exports.general = public_users;
